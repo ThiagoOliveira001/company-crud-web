@@ -1,5 +1,5 @@
 const Environment = {
-    API: process.env.REACT_APP_API,
+    API: 'https://crud-company.herokuapp.com/api',
 };
 
 export default Environment;

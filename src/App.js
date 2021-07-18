@@ -8,6 +8,10 @@ import { createBrowserHistory } from 'history';
 import './App.css';
 import Header from './components/Header';
 import ListCompany from './components/ListCompany';
+import NewCompany from './components/NewCompany';
+import NewEmployee from './components/NewEmployee';
+import EditEmployee from './components/EditEmployee';
+import EditCompany from './components/EditCompany';
 
 const history = createBrowserHistory({});
  
@@ -21,6 +25,18 @@ function App() {
         <Switch>
           <Route path="/company">
             <ListCompany history={history} />
+          </Route>
+          <Route path="/new/company">
+            <NewCompany history={history} />
+          </Route>
+          <Route path="/company-edit/:id">
+            <EditCompany history={history} />
+          </Route>
+          <Route path="/new/employee/:id">
+              <NewEmployee history={history} />
+          </Route>
+          <Route path="/employee/:id">
+              <EditEmployee history={history} />
           </Route>
 
           <Redirect from="/" to="/company" />

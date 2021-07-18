@@ -1,7 +1,13 @@
 .toolbar {
+    width: 5rem !important;
+   height: 100vh;
+   background: var(--main) !important; 
+   left: 0 !important;
+   display: flex;
+   align-items: center;
 
 }
 
 .barIcon {
-    
+    color: white;
 }

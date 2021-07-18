@@ -1,12 +1,16 @@
 import { Paper, TextField, Grid, Button } from '@material-ui/core';
+import { red } from '@material-ui/core/colors';
 import axios from 'axios';
-import React from 'react';
 import { fitToMask } from 'react-masked'
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Environment from '../environment/desenv';
 import styles from '../styles/Form.module.css';
+import ListEmployee from './ListEmployee';
 
-export default function NewCompany(props) {
+export default function EditCompany(props) {
     const { history } = props;
+    const { id } = useParams();
     const [loading, setLoading] = React.useState(false);
     const [submit, setSubmit] = React.useState(false);
     const [company, setCompany] = React.useState({
@@ -18,8 +22,20 @@ export default function NewCompany(props) {
         complement: '',
         city: '',
         uf: '',
-        phone: '',
+        phone: ''
     });
+
+    useEffect(() => {
+        setLoading(true);
+        axios.get(`${Environment.API}/company/${id}`)
+            .then(res => {
+                setLoading(false);
+                setCompany(res.data);
+            })
+            .catch(ex => {
+                setLoading(false);
+            });
+    }, []);
 
     const handleChangeField = (event) => {
         const newCompany = {
@@ -53,12 +69,12 @@ export default function NewCompany(props) {
         setLoading(true);
         setSubmit(true);
 
-        axios.post(`${Environment.API}/company`, company)
+        axios.put(`${Environment.API}/company/${id}`, company)
             .then(res => {
                 setLoading(false);
                 setSubmit(false);
 
-                history.push(`/company-edit/${res.data.id}`);
+                history.push(`/company`);
                 history.go();
             })
             .catch(ex => {
@@ -71,11 +87,21 @@ export default function NewCompany(props) {
         setCompany({ ...company, phone });
     }
 
+    const handleClickDelete = () => {
+        setLoading(true);
+        axios.delete(`${Environment.API}/company/${id}`)
+            .then(res => {
+                history.push('/company');
+                history.go();
+            })  
+            .catch(ex => setLoading(false));
+    }
+
     return (
         <section className={styles.container}>
             <Paper className={styles.cardForm}>
                 <form>
-                    <Grid container spacing={1}>
+                    <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField 
                                 label="Nome"
@@ -94,7 +120,6 @@ export default function NewCompany(props) {
                             <TextField 
                                 label="CEP"
                                 name="zipcode"
-                                type="text"
                                 onChange={handleChangeZipcode}
                                 value={fitToMask(company.zipcode, '99999-999')}
                                 style={{ width: '100%' }}
@@ -194,10 +219,25 @@ export default function NewCompany(props) {
                                 error={submit && !company.phone}
                                 helperText={submit && !company.phone ? 'Obrigatório' : ''}
                             />
-                            
                         </Grid>
                     </Grid>
-                    <Button color="primary" onClick={handleNew}>SALVAR</Button>
+                    <div style={{ 
+                            maxWidth: '100%', 
+                            maxHeight: '500px', 
+                            display: 'flex', 
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            flexDirection: 'column',
+                            padding: '20px' 
+                        }}
+                    >
+                            <ListEmployee 
+                                company={id}
+                                history={history}
+                            />  
+                            <Button color="primary" onClick={handleNew}>SALVAR</Button>
+                            <Button style={{ color: red[500] }} onClick={handleClickDelete}>EXCLUIR</Button>     
+                    </div>
                 </form>
             </Paper>
         </section>

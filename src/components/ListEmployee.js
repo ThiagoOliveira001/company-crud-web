@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { 
     IconButton, 
     Paper, 
@@ -11,16 +12,17 @@ import {
     TableRow, 
     TextField, 
     Typography,
-    Fab
+    Fab,
+    Button
 } from '@material-ui/core';
 import { useEffect } from 'react';
-import axios from 'axios';
-import Environment from '../environment/desenv';
 import { Add, DeleteForever, Search, Visibility } from '@material-ui/icons';
+import Environment from '../environment/desenv';
 import styles from '../styles/Lista.module.css';
+import { red } from '@material-ui/core/colors';
 
-export default function ListCompany(props) {
-    const { history } = props;
+export default function ListEmployee(props) {
+    const { history, company } = props;
 
     const [page, setPage] = React.useState(1);
     const [quantity, setQuantity] = React.useState(5);
@@ -28,7 +30,7 @@ export default function ListCompany(props) {
     const [loading, setLoading] = React.useState(false);
     const [records, setRecords] = React.useState({
         pages: 0,
-        companies: [],
+        employees: [],
         total: 0,
     });
 
@@ -40,25 +42,25 @@ export default function ListCompany(props) {
 
     const handleChangeRowsPerPage = (event) => {
         setQuantity(event.target.value);
-        handleClickSearch(null, event.target.value);
+        handleClickSearch();
     }
 
     const handleChangeName = (event) => {
         setName(event.target.value);
     }
 
-    const handleClickSearch = (newPage, newQtd) => {
+    const handleClickSearch = (newPage) => {
         const query = {
             name: name || '',
             page: newPage || page,
-            quantity: newQtd || quantity,
+            quantity,
         };
         const queryString = Object.keys(query)
             .map(key => `${key}=${query[key]}`)
             .join('&');
 
         setLoading(true);
-        axios.get(`${Environment.API}/company?${queryString}`)
+        axios.get(`${Environment.API}/employee/company/${company}?${queryString}`)
             .then(res => {
                 setRecords(res.data);
                 setLoading(false);
@@ -68,14 +70,14 @@ export default function ListCompany(props) {
             });
     }
 
-    const handleSearchCompany = (id) => {
-        history.push(`/company-edit/${id}`);
+    const handleSearchEmployee = (id) => {
+        history.push(`/employee/${id}`);
         history.go();
     }
 
     const handleClickDelete = (id) => {
         setLoading(true);
-        axios.delete(`${Environment.API}/company/${id}`)
+        axios.delete(`${Environment.API}/employee/${id}`)
             .then(res => {
                 setLoading(false);
                 setPage(1);
@@ -86,14 +88,26 @@ export default function ListCompany(props) {
             }); 
     }
 
-    const handleOpenNewCompany = () => {
-        history.push('/new/company');
+    const handleClickNew = () => {
+        history.push(`/new/employee/${company}`);
         history.go();
+    }
+
+    const handleClickDeleteAll = () => {
+        setLoading(true);
+        axios.delete(`${Environment.API}/employee/company/${company}`)
+            .then(res => {
+                setLoading(false);
+                handleClickSearch();
+            })
+            .then(ex => {
+                setLoading(false);
+            });
     }
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${Environment.API}/company`)
+        axios.get(`${Environment.API}/employee/company/${company}`)
             .then(res => {
                 setRecords(res.data);
                 setLoading(false);
@@ -104,13 +118,13 @@ export default function ListCompany(props) {
     }, []);
 
     return (
-        <section className={styles.container}>
+        <section>
             <Paper className={styles.cardLista}>
-                <Fab color="primary" style={{ float: 'right' }} onClick={handleOpenNewCompany}>
+                <Fab color="primary" style={{ float: 'right' }} onClick={handleClickNew}>
                     <Add />
                 </Fab>
                 <Typography component="h4">
-                    Empresas
+                    Funcionários
                 </Typography>
                 <div>
                     <TextField 
@@ -133,7 +147,7 @@ export default function ListCompany(props) {
                                     Nome
                                 </TableCell>
                                 <TableCell>
-                                    Cidade
+                                    Cargo
                                 </TableCell>
                                 <TableCell>
 
@@ -141,23 +155,23 @@ export default function ListCompany(props) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {records.companies.map((company, index) => {
+                            {records.employees.map((employee, index) => {
                                 return (
                                     <TableRow key={index}>
                                         <TableCell>
-                                            {company.id}
+                                            {employee.id}
                                         </TableCell>
                                         <TableCell>
-                                            {company.name}
+                                            {employee.name}
                                         </TableCell>
                                         <TableCell>
-                                            {company.city}
+                                            {employee.profession_name}
                                         </TableCell>
                                         <TableCell>
-                                            <IconButton onClick={() => handleSearchCompany(company.id)}>
+                                            <IconButton onClick={() => handleSearchEmployee(employee.id)}>
                                                 <Visibility />
                                             </IconButton>
-                                            <IconButton onClick={() => handleClickDelete(company.id)}>
+                                            <IconButton onClick={() => handleClickDelete(employee.id)}>
                                                 <DeleteForever />
                                             </IconButton>
                                         </TableCell>
@@ -178,6 +192,7 @@ export default function ListCompany(props) {
                     labelDisplayedRows={() => `Página ${page} de ${records.pages}`}
                     labelRowsPerPage="Linhas por página"
                 />
+                <Button style={{ color: red[500] }} onClick={handleClickDeleteAll}>EXCLUIR FUNCIONÁRIOS</Button>
             </Paper>
         </section>
     );

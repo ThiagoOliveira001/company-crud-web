@@ -1,0 +1,16 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: space-around;
+}
+
+.cardLista {
+    margin: auto;
+    border: 1px solid rgb(19, 19, 19, 0.2);
+    padding: 20px;
+}
+
+.cardLista .tabela tr > td {
+    padding: 5px;
+}

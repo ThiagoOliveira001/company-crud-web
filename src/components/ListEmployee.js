@@ -42,18 +42,18 @@ export default function ListEmployee(props) {
 
     const handleChangeRowsPerPage = (event) => {
         setQuantity(event.target.value);
-        handleClickSearch();
+        handleClickSearch(null, event.target.value);
     }
 
     const handleChangeName = (event) => {
         setName(event.target.value);
     }
 
-    const handleClickSearch = (newPage) => {
+    const handleClickSearch = (newPage, newQtd) => {
         const query = {
             name: name || '',
             page: newPage || page,
-            quantity,
+            quantity: newQtd || quantity,
         };
         const queryString = Object.keys(query)
             .map(key => `${key}=${query[key]}`)

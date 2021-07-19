@@ -18,6 +18,7 @@ import axios from 'axios';
 import Environment from '../environment/desenv';
 import { Add, DeleteForever, Search, Visibility } from '@material-ui/icons';
 import styles from '../styles/Lista.module.css';
+import {ToastsContainer, ToastsStore} from 'react-toasts';
 
 export default function ListCompany(props) {
     const { history } = props;
@@ -65,6 +66,7 @@ export default function ListCompany(props) {
             })  
             .catch(ex => {
                 setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
             });
     }
 
@@ -83,6 +85,7 @@ export default function ListCompany(props) {
             })
             .catch(ex => {
                 setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
             }); 
     }
 
@@ -100,6 +103,7 @@ export default function ListCompany(props) {
             })
             .catch(ex => {
                 setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
             });
     }, []);
 
@@ -179,6 +183,7 @@ export default function ListCompany(props) {
                     labelRowsPerPage="Linhas por página"
                 />
             </Paper>
+            <ToastsContainer store={ToastsStore}/>
         </section>
     );
 }

@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Environment from '../environment/desenv';
 import styles from '../styles/Form.module.css';
+import {ToastsContainer, ToastsStore} from 'react-toasts';
 
 export default function NewEmployee(props) {
     const { history } = props;
@@ -32,7 +33,9 @@ export default function NewEmployee(props) {
             .then(res => {
                 setProfessions(res.data);
             })
-            .catch(ex => console.log(ex));
+            .catch(ex => {
+                ToastsStore.error(ex.response?.data?.message);
+            });
     }, [])
 
     const handleNew = () => {
@@ -49,6 +52,7 @@ export default function NewEmployee(props) {
             })
             .catch(ex => {
                 setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
             });
     }
 
@@ -127,6 +131,7 @@ export default function NewEmployee(props) {
                     </Button>
                 </form>
             </Paper>
+            <ToastsContainer store={ToastsStore}/>
         </section>
     );
 }

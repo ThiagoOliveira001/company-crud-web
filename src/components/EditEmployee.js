@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import Environment from '../environment/desenv';
 import styles from '../styles/Form.module.css';
 import { useParams } from 'react-router-dom';
+import {ToastsContainer, ToastsStore} from 'react-toasts';
 
 export default function EditEmployee(props) {
     const { history } = props;
@@ -29,9 +30,15 @@ export default function EditEmployee(props) {
                         setEmployee(res.data);
                         setLoading(false);
                     })
-                    .catch(ex => setLoading(false));
+                    .catch(ex => {
+                        setLoading(false);
+                        ToastsStore.error(ex.response?.data?.message);
+                    });
             })
-            .catch(ex => setLoading(false));
+            .catch(ex => {
+                setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
+            });
     }, []);
 
     const handleChangeField = (event) => {
@@ -50,7 +57,10 @@ export default function EditEmployee(props) {
                 history.push(`/company-edit/${employee.company_id}`);
                 history.go();
             })
-            .catch(ex => setLoading(false));
+            .catch(ex => {
+                setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
+            });
     }
 
     return (
@@ -118,6 +128,7 @@ export default function EditEmployee(props) {
                     </Button>
                 </form>
             </Paper>
+            <ToastsContainer store={ToastsStore}/>
         </section>
     );
 }

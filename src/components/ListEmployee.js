@@ -20,6 +20,7 @@ import { Add, DeleteForever, Search, Visibility } from '@material-ui/icons';
 import Environment from '../environment/desenv';
 import styles from '../styles/Lista.module.css';
 import { red } from '@material-ui/core/colors';
+import {ToastsContainer, ToastsStore} from 'react-toasts';
 
 export default function ListEmployee(props) {
     const { history, company } = props;
@@ -67,6 +68,7 @@ export default function ListEmployee(props) {
             })  
             .catch(ex => {
                 setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
             });
     }
 
@@ -85,6 +87,7 @@ export default function ListEmployee(props) {
             })
             .catch(ex => {
                 setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
             }); 
     }
 
@@ -102,6 +105,7 @@ export default function ListEmployee(props) {
             })
             .then(ex => {
                 setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
             });
     }
 
@@ -114,6 +118,7 @@ export default function ListEmployee(props) {
             })
             .catch(ex => {
                 setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
             });
     }, []);
 
@@ -194,6 +199,7 @@ export default function ListEmployee(props) {
                 />
                 <Button style={{ color: red[500] }} onClick={handleClickDeleteAll}>EXCLUIR FUNCIONÁRIOS</Button>
             </Paper>
+            <ToastsContainer store={ToastsStore}/>
         </section>
     );
 }

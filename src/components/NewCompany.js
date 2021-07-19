@@ -4,6 +4,7 @@ import React from 'react';
 import { fitToMask } from 'react-masked'
 import Environment from '../environment/desenv';
 import styles from '../styles/Form.module.css';
+import {ToastsContainer, ToastsStore} from 'react-toasts';
 
 export default function NewCompany(props) {
     const { history } = props;
@@ -45,7 +46,7 @@ export default function NewCompany(props) {
                 setCompany({ ...company, ...location, zipcode });
             })
             .catch(ex => {
-
+                ToastsStore.error(ex.response?.data?.message);
             });
     }
 
@@ -63,6 +64,7 @@ export default function NewCompany(props) {
             })
             .catch(ex => {
                 setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
             });
     }
 
@@ -200,6 +202,7 @@ export default function NewCompany(props) {
                     <Button color="primary" onClick={handleNew}>SALVAR</Button>
                 </form>
             </Paper>
+            <ToastsContainer store={ToastsStore}/>
         </section>
     ); 
 }

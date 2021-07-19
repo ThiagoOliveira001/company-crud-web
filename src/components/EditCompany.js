@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import Environment from '../environment/desenv';
 import styles from '../styles/Form.module.css';
 import ListEmployee from './ListEmployee';
+import {ToastsContainer, ToastsStore} from 'react-toasts';
 
 export default function EditCompany(props) {
     const { history } = props;
@@ -33,6 +34,7 @@ export default function EditCompany(props) {
                 setCompany(res.data);
             })
             .catch(ex => {
+                ToastsStore.error(ex.response?.data?.message);
                 setLoading(false);
             });
     }, []);
@@ -61,7 +63,7 @@ export default function EditCompany(props) {
                 setCompany({ ...company, ...location, zipcode });
             })
             .catch(ex => {
-
+                ToastsStore.error(ex.response?.data?.message);
             });
     }
 
@@ -79,6 +81,7 @@ export default function EditCompany(props) {
             })
             .catch(ex => {
                 setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
             });
     }
 
@@ -94,7 +97,10 @@ export default function EditCompany(props) {
                 history.push('/company');
                 history.go();
             })  
-            .catch(ex => setLoading(false));
+            .catch(ex => {
+                setLoading(false);
+                ToastsStore.error(ex.response?.data?.message);
+            });
     }
 
     return (
@@ -240,6 +246,7 @@ export default function EditCompany(props) {
                     </div>
                 </form>
             </Paper>
+            <ToastsContainer store={ToastsStore}/>
         </section>
     ); 
 }

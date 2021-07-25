@@ -237,23 +237,16 @@ export default function EditCompany(props) {
                             />
                         </Grid>
                     </Grid>
-                    <div style={{ 
-                            maxWidth: '100%', 
-                            maxHeight: '500px', 
-                            display: 'flex', 
-                            justifyContent: 'center',
-                            alignContent: 'center',
-                            flexDirection: 'column',
-                            padding: '20px' 
-                        }}
-                    >
+                    <Grid item xs={12} sm={12} md={12} xl={12} lg={12}>
+                        <div className={styles.listForm}>
                             <ListEmployee 
                                 company={id}
                                 history={history}
                             />  
                             <Button color="primary" onClick={handleNew}>SALVAR</Button>
                             <Button style={{ color: red[500] }} onClick={handleClickDelete}>EXCLUIR</Button>     
-                    </div>
+                        </div>
+                    </Grid>
                 </form>
             </Paper>
             <ToastsContainer store={ToastsStore}/>

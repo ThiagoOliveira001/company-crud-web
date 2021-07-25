@@ -21,6 +21,7 @@ import Environment from '../environment/desenv';
 import styles from '../styles/Lista.module.css';
 import { red } from '@material-ui/core/colors';
 import {ToastsContainer, ToastsStore} from 'react-toasts';
+import Loader from './Loader';
 
 export default function ListEmployee(props) {
     const { history, company } = props;
@@ -68,7 +69,9 @@ export default function ListEmployee(props) {
             })  
             .catch(ex => {
                 setLoading(false);
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             });
     }
 
@@ -87,7 +90,9 @@ export default function ListEmployee(props) {
             })
             .catch(ex => {
                 setLoading(false);
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             }); 
     }
 
@@ -103,9 +108,11 @@ export default function ListEmployee(props) {
                 setLoading(false);
                 handleClickSearch();
             })
-            .then(ex => {
+            .catch(ex => {
                 setLoading(false);
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             });
     }
 
@@ -118,12 +125,15 @@ export default function ListEmployee(props) {
             })
             .catch(ex => {
                 setLoading(false);
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             });
     }, []);
 
     return (
         <section>
+            <Loader loading={loading} />
             <Paper className={styles.cardLista}>
                 <Fab color="primary" style={{ float: 'right' }} onClick={handleClickNew}>
                     <Add />

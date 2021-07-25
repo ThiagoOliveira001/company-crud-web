@@ -5,6 +5,7 @@ import { fitToMask } from 'react-masked'
 import Environment from '../environment/desenv';
 import styles from '../styles/Form.module.css';
 import {ToastsContainer, ToastsStore} from 'react-toasts';
+import Loader from './Loader';
 
 export default function NewCompany(props) {
     const { history } = props;
@@ -32,7 +33,7 @@ export default function NewCompany(props) {
 
     const handleChangeZipcode = (event) => {
         const zipcode = event.target.value.replace(/[^\d]/g, '');
-        if (!zipcode) return false;
+        if (!zipcode && !!zipcode) return false;
 
         setCompany({ ...company, zipcode });
 
@@ -46,7 +47,9 @@ export default function NewCompany(props) {
                 setCompany({ ...company, ...location, zipcode });
             })
             .catch(ex => {
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             });
     }
 
@@ -64,7 +67,9 @@ export default function NewCompany(props) {
             })
             .catch(ex => {
                 setLoading(false);
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             });
     }
 
@@ -75,10 +80,11 @@ export default function NewCompany(props) {
 
     return (
         <section className={styles.container}>
+            <Loader loading={loading} />
             <Paper className={styles.cardForm}>
                 <form>
                     <Grid container spacing={1}>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={12} xl={12} lg={12}>
                             <TextField 
                                 label="Nome"
                                 name="name"
@@ -92,7 +98,7 @@ export default function NewCompany(props) {
                                 helperText={submit && !company.name ? 'Obrigatório' : ''}
                             />
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={12} sm={2} md={2} xl={2} lg={2}>
                             <TextField 
                                 label="CEP"
                                 name="zipcode"
@@ -104,7 +110,7 @@ export default function NewCompany(props) {
                                 helperText={submit && !company.zipcode ? 'Obrigatório' : ''}
                             />
                         </Grid>
-                        <Grid item xs={5}>
+                        <Grid item xs={12} sm={5} md={5} xl={5} lg={5}>
                             <TextField 
                                 label="Logradouro"
                                 name="address"
@@ -118,7 +124,7 @@ export default function NewCompany(props) {
                                 helperText={submit && !company.address ? 'Obrigatório' : ''}
                             />
                         </Grid>
-                        <Grid item xs={5}>
+                        <Grid item xs={12} sm={5} md={5} xl={5} lg={5}>
                             <TextField 
                                 label="Numero"
                                 name="number"
@@ -132,7 +138,7 @@ export default function NewCompany(props) {
                                 helperText={submit && !company.number ? 'Obrigatório' : ''}
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} sm={3} md={3} xl={3} lg={3}>
                             <TextField 
                                 label="Bairro"
                                 name="neighborhood"
@@ -146,7 +152,7 @@ export default function NewCompany(props) {
                                 helperText={submit && !company.neighborhood ? 'Obrigatório' : ''}
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} sm={3} md={3} xl={3} lg={3}>
                             <TextField 
                                 label="Complemento"
                                 name="complement"
@@ -158,7 +164,7 @@ export default function NewCompany(props) {
                                 style={{ width: '100%' }}
                             />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={12} sm={4} md={4} xl={4} lg={4}>
                             <TextField 
                                 label="Cidade"
                                 name="city"
@@ -172,7 +178,7 @@ export default function NewCompany(props) {
                                 helperText={submit && !company.city ? 'Obrigatório' : ''}
                             />
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={12} sm={2} md={2} xl={2} lg={2}>
                             <TextField 
                                 label="UF"
                                 name="uf"
@@ -186,7 +192,7 @@ export default function NewCompany(props) {
                                 helperText={submit && !company.uf ? 'Obrigatório' : ''}
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} sm={3} md={3} xl={3} lg={3}>
                             <TextField 
                                 label="Telefone ou celular"
                                 name="phone"
@@ -196,7 +202,6 @@ export default function NewCompany(props) {
                                 error={submit && !company.phone}
                                 helperText={submit && !company.phone ? 'Obrigatório' : ''}
                             />
-                            
                         </Grid>
                     </Grid>
                     <Button color="primary" onClick={handleNew}>SALVAR</Button>

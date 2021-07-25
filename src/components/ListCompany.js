@@ -19,6 +19,7 @@ import Environment from '../environment/desenv';
 import { Add, DeleteForever, Search, Visibility } from '@material-ui/icons';
 import styles from '../styles/Lista.module.css';
 import {ToastsContainer, ToastsStore} from 'react-toasts';
+import Loader from './Loader';
 
 export default function ListCompany(props) {
     const { history } = props;
@@ -66,7 +67,9 @@ export default function ListCompany(props) {
             })  
             .catch(ex => {
                 setLoading(false);
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             });
     }
 
@@ -85,7 +88,9 @@ export default function ListCompany(props) {
             })
             .catch(ex => {
                 setLoading(false);
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             }); 
     }
 
@@ -103,12 +108,15 @@ export default function ListCompany(props) {
             })
             .catch(ex => {
                 setLoading(false);
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             });
     }, []);
 
     return (
         <section className={styles.container}>
+            <Loader loading={loading} />
             <Paper className={styles.cardLista}>
                 <Fab color="primary" style={{ float: 'right' }} onClick={handleOpenNewCompany}>
                     <Add />

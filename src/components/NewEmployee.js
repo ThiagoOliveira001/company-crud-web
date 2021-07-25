@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import Environment from '../environment/desenv';
 import styles from '../styles/Form.module.css';
 import {ToastsContainer, ToastsStore} from 'react-toasts';
+import Loader from './Loader';
 
 export default function NewEmployee(props) {
     const { history } = props;
@@ -34,7 +35,9 @@ export default function NewEmployee(props) {
                 setProfessions(res.data);
             })
             .catch(ex => {
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             });
     }, [])
 
@@ -52,7 +55,9 @@ export default function NewEmployee(props) {
             })
             .catch(ex => {
                 setLoading(false);
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             });
     }
 
@@ -65,24 +70,28 @@ export default function NewEmployee(props) {
 
     return (
         <section className={styles.container}>
+            <Loader loading={loading} />
             <Paper className={styles.cardForm}>
                 <Typography component="h4">
                     Novo funcionário 
                 </Typography>
                 <form>
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={12} xl={12} lg={12}>
                            <TextField 
                                 label="Nome"
                                 name="name"
                                 value={employee.name}
                                 onChange={handleChangeField}
+                                inputProps={{
+                                    maxLength: 200
+                                }}
                                 style={{ width: '100%' }}
                                 error={submit && !employee.name}
                                 helperText={submit && !employee.name ? 'Obrigatório' : ''}
                            /> 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={12} xl={12} lg={12}>
                             <TextField 
                                 label="Salário"
                                 name="salary"
@@ -93,7 +102,7 @@ export default function NewEmployee(props) {
                                 helperText={submit && !employee.salary ? 'Obrigatório' : ''}
                             /> 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={12} xl={12} lg={12}>
                             <TextField 
                                 label="Cargo"
                                 name="profession_id"

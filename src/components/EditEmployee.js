@@ -1,10 +1,17 @@
 import axios from 'axios';
-import { Button, Grid, Paper, TextField, Typography } from '@material-ui/core';
+import { 
+    Button, 
+    Grid, 
+    Paper, 
+    TextField, 
+    Typography
+} from '@material-ui/core';
 import React, { useEffect } from 'react';
 import Environment from '../environment/desenv';
 import styles from '../styles/Form.module.css';
 import { useParams } from 'react-router-dom';
 import {ToastsContainer, ToastsStore} from 'react-toasts';
+import Loader from './Loader';
 
 export default function EditEmployee(props) {
     const { history } = props;
@@ -32,12 +39,16 @@ export default function EditEmployee(props) {
                     })
                     .catch(ex => {
                         setLoading(false);
-                        ToastsStore.error(ex.response?.data?.message);
+                        if (ex.response) {
+                            ToastsStore.error(ex.response?.data?.message);
+                        }
                     });
             })
             .catch(ex => {
                 setLoading(false);
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             });
     }, []);
 
@@ -59,30 +70,36 @@ export default function EditEmployee(props) {
             })
             .catch(ex => {
                 setLoading(false);
-                ToastsStore.error(ex.response?.data?.message);
+                if (ex.response) {
+                    ToastsStore.error(ex.response?.data?.message);
+                }
             });
     }
 
     return (
         <section className={styles.container}>
+            <Loader loading={loading} />
             <Paper className={styles.cardForm}>
                 <Typography component="h4">
                     Editar funcionário 
                 </Typography>
                 <form>
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={12} xl={12} lg={12}>
                            <TextField 
                                 label="Nome"
                                 name="name"
                                 value={employee.name}
                                 onChange={handleChangeField}
+                                inputProps={{
+                                    maxLength: 200
+                                }}
                                 style={{ width: '100%' }}
                                 error={submit && !employee.name}
                                 helperText={submit && !employee.name ? 'Obrigatório' : ''}
                            /> 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={12} xl={12} lg={12}>
                             <TextField 
                                 label="Salário"
                                 name="salary"
@@ -93,7 +110,7 @@ export default function EditEmployee(props) {
                                 helperText={submit && !employee.salary ? 'Obrigatório' : ''}
                             /> 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={12} xl={12} lg={12}>
                             <TextField 
                                 label="Cargo"
                                 name="profession_id"

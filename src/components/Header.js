@@ -16,7 +16,7 @@ export default function Header(props) {
     }
 
     return (
-        <AppBar position="fixed" className={styles.toolbar}>
+        <AppBar  className={styles.toolbar}>
             <Toolbar className={styles.buttonBar}>
                 <IconButton className={styles.barIcon} onClick={handleButtonClick}>
                     <KeyboardBackspace />
